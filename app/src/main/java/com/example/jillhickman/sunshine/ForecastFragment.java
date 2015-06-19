@@ -1,10 +1,14 @@
 package com.example.jillhickman.sunshine;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,6 +37,33 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        //for fragment to handle menu events
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        //Inflates the menu
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        //Handle action bar item click here.
+        //Action bar will automatically handle clicks on Home/up button,
+        //as long as a specified parent activity in AndroidManifest.xml
+        int id = item.getItemId();
+        if (id==R.id.action_refresh){
+            FetchWeatherTask weatherTask = new FetchWeatherTask();
+            weatherTask.execute("84042");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //Create an array list of weather forecast list items
         String[] data = {
@@ -56,13 +87,13 @@ public class ForecastFragment extends Fragment {
 
         return rootView;
     }
-
-    public class FetchWeatherTask extends AsyncTask<Void, Void,Void> {
+    //String param toke zip code in as argument
+    public class FetchWeatherTask extends AsyncTask<String, Void,Void> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected  Void doInBackground(Void... params){
+        protected  Void doInBackground(String... params){
             //These two need to be declared outside the try/catch
             //so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -74,7 +105,27 @@ public class ForecastFragment extends Fragment {
             try {
                 //Construct the URL for the OpenWeatherMap query
                 //Possible parameters are available at OWM's forecast API page, http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=84042&mode=json&units=metric&cnt=7");
+                String format = "json";
+                String units = "metric";
+                int numberOfDays = 7;
+
+                final String FORECAST_BASE_URL ="http://api.openweathermap.org/data/2.5/forecast/daily?";
+                final String QUERY_PARAM = "q";
+                final String FORMAT_PARAM = "mode";
+                final String UNITS_PARAM = "units";
+                final String DAYS_PARAM = "cnt";
+
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                        .appendQueryParameter(QUERY_PARAM, params[0])
+                        .appendQueryParameter(FORMAT_PARAM, format)
+                        .appendQueryParameter(UNITS_PARAM, units)
+                        .appendQueryParameter(DAYS_PARAM, Integer.toString(numberOfDays))
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                //Log to see if Uri builder is logging the query
+                Log.v(LOG_TAG, "Built Uri " + builtUri.toString());
 
                 //Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -102,6 +153,9 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+
+                Log.v(LOG_TAG,"Forecast JSON String: "+forecastJsonStr);
+
             }catch (IOException e){
                 Log.e(LOG_TAG, "Error ", e);
                 //If the code didn't successfully get the weather date, there's no point in attempt to pase it.
