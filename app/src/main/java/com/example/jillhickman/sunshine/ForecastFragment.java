@@ -94,7 +94,7 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
     //String param toke zip code in as argument
-    public class FetchWeatherTask extends AsyncTask<String, Void,String[]> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -287,6 +287,15 @@ public class ForecastFragment extends Fragment {
             }
             //This will only happen if there was an error getting or parsing the forecast.
             return null;
+        }
+
+        //The result from doInBackground
+        @Override
+        protected void onPostExecute (String[] result) {
+            Log.v("firstString", result[0]);
+            mForecastAdapter.clear();
+            mForecastAdapter.addAll(result);
+            super.onPostExecute(result);
         }
     }
 }
