@@ -191,7 +191,6 @@ public class ForecastFragment extends Fragment {
             }
 
             for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
             }
             return resultStrs;
 
@@ -231,7 +230,6 @@ public class ForecastFragment extends Fragment {
                 URL url = new URL(builtUri.toString());
 
                 //Log to see if Uri builder is logging the query
-                Log.v(LOG_TAG, "Built Uri " + builtUri.toString());
 
                 //Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -260,7 +258,6 @@ public class ForecastFragment extends Fragment {
                 }
                 forecastJsonStr = buffer.toString();
 
-                Log.v(LOG_TAG,"Forecast JSON String: "+forecastJsonStr);
 
             }catch (IOException e){
                 Log.e(LOG_TAG, "Error ", e);
@@ -292,7 +289,6 @@ public class ForecastFragment extends Fragment {
         //The result from doInBackground
         @Override
         protected void onPostExecute (String[] result) {
-            Log.v("firstString", result[0]);
             mForecastAdapter.clear();
             mForecastAdapter.addAll(result);
             super.onPostExecute(result);
