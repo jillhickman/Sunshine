@@ -31,8 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -66,32 +64,23 @@ public class ForecastFragment extends Fragment {
         //as long as a specified parent activity in AndroidManifest.xml
         int id = item.getItemId();
         if (id==R.id.action_refresh){
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-            //When refresh button pressed, check to see if a location is stored in Preference,
-            //otherwise use the default.
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String location = preferences.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
-            weatherTask.execute(location);
+            //Update weather data when refresh button clicked
+            updateWeather();
             return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Create an array list of weather forecast list items
-        String[] data = {
-                "Today 6/14 - Sunny - 88/64",
-                "Monday 6/15 - Cloudy - 77/60",
-                "Tuesday 6/16 - Sunny - 80/60",
-                "Wednesday 6/17 - Sunny - 84/64",
-                "Thursday 6/18 - Sunny - 88/68",
-                "Friday 6/19 - Sunny - 92/72"
-        };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-
         //Create an ArrayAdapter to populate the ListView it's attached to
-         mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_text_view, weekForecast);
+         mForecastAdapter =
+                 new ArrayAdapter<String>(getActivity()//Current context, this activity
+                         ,R.layout.list_item_forecast,//The name of the layout ID
+                         R.id.list_item_forecast_text_view,//The ID of the textview to populate
+                         new ArrayList<String>());
+
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -110,12 +99,32 @@ public class ForecastFragment extends Fragment {
                         .putExtra("REAL_DATA", forecast);
                 startActivity(intent);
 
-
             }
         });
-
         return rootView;
     }
+
+    //Helper method so that this method can be called during onStart() to update with weather data
+    private void updateWeather() {
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        //When refresh button pressed, check to see if a location is stored in Preference,
+        //otherwise use the default.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = preferences.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        weatherTask.execute(location);
+    }
+
+
+    //When starting device, updateWeather() called so that the view populates with weatherData
+    //Override so "refresh" happen when the fragment start
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+
+    }
+
+
     //String param take zip code in as argument
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
