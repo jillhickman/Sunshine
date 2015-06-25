@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">Sunshine</string>
-    <string name="action_settings">Settings</string>
-    //Menu label to fetch updated weather data from server
-    //translatable is set to false
-    <string name="action_refresh" translatable= "false">Refresh</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="title_activity_detail">Details</string>
 
+    <!--Menu label to fetch updated weather data from server-->
+    <string name="action_refresh" translatable= "false">Refresh</string>
+
+
+    <!--Menu label to fetch map location -->
+    <string name="action_map">Map location</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Strings related to location settings -->
     <!-- Label for the location preference [CHAR LIMIT=30] -->
     <string name="pref_location_label">Location</string>
 
@@ -16,6 +21,7 @@
     <!-- Default postal code for location preference [CHAR LIMIT=NONE] -->
     <string name="pref_location_default" translatable="false">84042</string>
 
+    <!--Strings related to units settings -->
     <!--Label for the Temperature Unit preference -->
     <string name="pref_units_label">Temperature Units</string>
 
@@ -33,10 +39,5 @@
 
     <!-- Value for SharedPreference for imperical temperature option-->
     <string name="pref_units_imperial" translatable="false">imperical</string>
-
-    
-
-
-
 
 </resources>
