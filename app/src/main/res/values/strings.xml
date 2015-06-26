@@ -6,10 +6,11 @@
     <!--Menu label to fetch updated weather data from server-->
     <string name="action_refresh" translatable= "false">Refresh</string>
 
-
+    <!--Action item settings -->
     <!--Menu label to fetch map location -->
     <string name="action_map">Map location</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
 
     <!--Strings related to location settings -->
     <!-- Label for the location preference [CHAR LIMIT=30] -->
