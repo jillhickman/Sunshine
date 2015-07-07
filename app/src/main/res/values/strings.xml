@@ -41,4 +41,6 @@
     <!-- Value for SharedPreference for imperical temperature option-->
     <string name="pref_units_imperial" translatable="false">imperical</string>
 
+    <string name="content_authority">com.example.jillhickman.sunshine</string>
+
 </resources>
