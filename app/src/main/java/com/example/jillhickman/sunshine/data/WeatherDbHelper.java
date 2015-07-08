@@ -25,7 +25,7 @@ import com.example.jillhickman.sunshine.data.WeatherContract.WeatherEntry;
 /**
  * Manages a local database for weather data.
  */
-public class WeatherDbHelper extends SQLiteOpenHelper {
+public class    WeatherDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 2;
@@ -42,6 +42,8 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         // location setting, the city name, and the latitude and longitude
         final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
                 LocationEntry._ID + " INTEGER PRIMARY KEY," +
+                //Used for foreign key in our weather table, so must not change, By using this
+                // constraint,it keeps it from having multiple ids.
                 LocationEntry.COLUMN_LOCATION_SETTING + " TEXT UNIQUE NOT NULL, " +
                 LocationEntry.COLUMN_CITY_NAME + " TEXT NOT NULL, " +
                 LocationEntry.COLUMN_COORD_LAT + " REAL NOT NULL, " +
