@@ -203,9 +203,6 @@ public class WeatherProvider extends ContentProvider {
         return retCursor;
     }
 
-    /*
-        Student: Add the ability to insert Locations to the implementation of this function.
-     */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -222,9 +219,21 @@ public class WeatherProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
+            //Added the ability to insert Locations to the implementation of this function.
+            case LOCATION: {
+                    //Select the right table name and return the right location URI
+                    long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
+                    if ( _id > 0 )
+                        returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
+                    else
+                        throw new android.database.SQLException("Failed to insert row into " + uri);
+                    break;
+            }
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        //Call contentResolver to notify change to notify all registered observers.
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
