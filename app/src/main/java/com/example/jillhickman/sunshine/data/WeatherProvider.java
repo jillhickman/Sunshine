@@ -131,12 +131,10 @@ public class WeatherProvider extends ContentProvider {
         return uriMatcher;
     }
 
-    /*
-        Students: We've coded this for you.  We just create a new WeatherDbHelper for later use
-        here.
-     */
+
     @Override
     public boolean onCreate() {
+        //Make a new instance of WeatherDbHelper, to use for most of our content provider methods.
         mOpenHelper = new WeatherDbHelper(getContext());
         return true;
     }
@@ -149,16 +147,21 @@ public class WeatherProvider extends ContentProvider {
     public String getType(Uri uri) {
 
         // Use the Uri Matcher to determine what kind of URI this is.
+        //Review of what Uri we are planning to handle.
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
             case WEATHER_WITH_LOCATION_AND_DATE:
+                //Returns an item, a single row.
                 return WeatherContract.WeatherEntry.CONTENT_ITEM_TYPE;
             case WEATHER_WITH_LOCATION:
+                //Returns a directory, multiple items.
                 return  WeatherContract.WeatherEntry.CONTENT_TYPE;
             case WEATHER:
+                //Returns a directory
                 return WeatherContract.WeatherEntry.CONTENT_TYPE;
             case LOCATION:
+                //Returns a directory
                 return WeatherContract.LocationEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -305,6 +308,10 @@ public class WeatherProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         if (rowsUpdated != 0) {
+            //Set the notification Uri for our cursor to the one that was passed into the function.
+            //This causes the cursor to register a content observer, to watch for changes to the Uri,
+            //and all it's descendants. This allows the content provider to easily tell the Ui
+            //when the cursor changes. On operations like data insert or update.
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;    }

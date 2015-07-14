@@ -301,8 +301,8 @@ public class TestProvider extends AndroidTestCase {
 
     // Make sure we can still delete after adding/updating stuff
     //
-    // Student: Uncomment this test after you have completed writing the insert functionality
-    // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
+    // Test this test after you have completed writing the insert functionality
+    // It relies on insertions with testInsertReadProvider, so insert and
     // query functionality must also be complete before this test can be used.
     public void testInsertReadProvider() {
         ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
